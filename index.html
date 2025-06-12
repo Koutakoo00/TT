@@ -339,9 +339,9 @@
 
   <div id="chat-page" class="page">
     <div class="grid-container-2x2">
-      <div class="grid-item"><img src="趣味マッチング.png" alt="趣味マッチング" /><br><span data-i18n="hobbyMatching">趣味マッチング</span></div>
-      <div class="grid-item" onclick="openTrends()"><img src="トレンド.png" alt="トレンド" /><br><span data-i18n="trends">トレンド</span></div>
-      <div class="grid-item" onclick="showLocalTalk()"><img src="ローカルトーク.png" alt="ローカルトーク" /><br><span data-i18n="localTalk">ローカルトーク</span></div>
+      <div class="grid-item"><img src="images/趣味マッチング.png" alt="趣味マッチング" /><br><span data-i18n="hobbyMatching">趣味マッチング</span></div>
+      <div class="grid-item" onclick="openTrends()"><img src="images/トレンド.png" alt="トレンド" /><br><span data-i18n="trends">トレンド</span></div>
+      <div class="grid-item" onclick="showLocalTalk()"><img src="images/ローカルトーク.png" alt="ローカルトーク" /><br><span data-i18n="localTalk">ローカルトーク</span></div>
       <div class="grid-item" onclick="showSearch()"><img src="検索.png" alt="検索" /><br><span data-i18n="search">検索</span></div>
     </div>
   </div>
@@ -375,7 +375,7 @@
   <div id="profile-page" class="page">
     <button onclick="showHome()" data-i18n="back">⬅ 戻る</button>
     <div class="profile-container">
-      <img id="profile-image" src="c:\Users\ko_ta\OneDrive\画像\スクリーンショット\プロフィール.png" alt="プロフィール画像" />
+      <img id="profile-image" src="images/プロフィール.png" alt="プロフィール画像" />
       <label for="profile-image-input" data-i18n="selectProfileImage">プロフィール画像を選択</label>
       <input type="file" id="profile-image-input" accept="image/*">
       <input type="text" id="username" data-i18n-placeholder="usernamePlaceholder" value="ユーザー">
@@ -656,7 +656,7 @@
           messageDiv.classList.add("post");
           messageDiv.innerHTML = `
             <div style="display: flex; align-items: center; margin-bottom: 10px;">
-              <img src="${localStorage.getItem('profileImage') || 'c:\\Users\\ko_ta\\OneDrive\\画像\\スクリーンショット\\プロフィール.png'}" alt="プロフィール画像" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;" />
+              <img src="${localStorage.getItem('profileImage') || 'images/プロフィール.png'}" alt="プロフィール画像" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;" />
               <strong>${localStorage.getItem('username') || (currentLanguage === 'ja' ? 'ユーザー' : 'User')}</strong>
             </div>
             <p>${message}</p>
@@ -701,7 +701,7 @@
         postDiv.classList.add("post");
         postDiv.innerHTML = `
           <div style="display: flex; align-items: center; margin-bottom: 10px;">
-            <img src="${post.profileImage || 'c:\\Users\\ko_ta\\OneDrive\\画像\\スクリーンショット\\プロフィール.png'}" alt="プロフィール画像" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;" />
+            <img src="${post.profileImage || 'images/プロフィール.png'}" alt="プロフィール画像" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;" />
             <strong>${post.username}</strong>
           </div>
           <p>${post.text}</p>
