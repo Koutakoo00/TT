@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Train Talk - アプリ版</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+      margin: 0;
+    }
+
+    .header {
+      width: 100%;
+      background: #007bff;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      font-size: 24px;
+      font-weight: bold;
+      position: fixed;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .home-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: absolute;
+      top: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .home-button img {
+      width: 80px;
+      height: 80px;
+    }
+
+    .home-button span {
+      font-size: 16px;
+      color: black;
+      margin-top: 5px;
+    }
+
+    .grid-container, .grid-container-2x2 {
+      display: grid;
+      gap: 15px;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    .grid-container {
+      grid-template-columns: repeat(3, 1fr);
+      margin-top: 200px;
+    }
+
+    .grid-container-2x2 {
+      grid-template-columns: repeat(2, 1fr);
+      margin-top: 200px;
+    }
+
+    .grid-item {
+      background: white;
+      padding: 20px;
+      text-align: center;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .grid-item:active {
+      transform: scale(0.95);
+    }
+
+    .grid-item img {
+      width: 40px;
+      height: 40px;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .active {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .local-talk-wrapper, .search-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 90%;
+      max-width: 500px;
+      margin-top: 150px;
+    }
+
+    .nearby-users {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+      width: 100%;
+    }
+
+    .nearby-users h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .user-list {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .user-item {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+    }
+
+    .user-item:hover {
+      background: #f5f5f5;
+    }
+
+    .post-container, .search-container {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+      width: 100%;
+    }
+
+    .post-list, .search-results {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+      max-height: 400px;
+      overflow-y: auto;
+      width: 100%;
+    }
+
+    textarea, input[type="text"] {
+      width: 100%;
+      height: 80px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+      resize: none;
+    }
+
+    input[type="text"] {
+      height: 40px;
+    }
+
+    .post-button, .search-button {
+      width: 100%;
+      padding: 10px;
+      background: #007bff;
+      color: white;
+      font-size: 18px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    .post {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+      margin-bottom: 15px;
+      position: relative;
+    }
+
+    .reply-button, .like-button {
+      background: none;
+      border: none;
+      color: #007bff;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    .like-count {
+      color: #007bff;
+      font-size: 14px;
+    }
+
+    .profile-container, .settings-container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 400px;
+      margin-top: 150px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .profile-container img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 15px;
+      border: 2px solid #ccc;
+    }
+
+    .profile-container input[type="text"], .settings-container select {
+      width: 100%;
+      max-width: 300px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin: 10px 0;
+    }
+
+    .profile-container input[type="file"] {
+      margin: 10px 0;
+      font-size: 14px;
+    }
+
+    .profile-container button, .settings-container button {
+      width: 100%;
+      max-width: 300px;
+      padding: 10px;
+      background: #007bff;
+      color: white;
+      font-size: 18px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    .profile-container label {
+      font-size: 14px;
+      color: #333;
+      margin-top: 10px;
+      display: block;
+    }
+
+    .save-message, .language-change-message {
+      display: none;
+      color: #28a745;
+      font-size: 16px;
+      margin-top: 10px;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+
+    .save-message.show, .language-change-message.show {
+      display: block;
+      opacity: 1;
+    }
+
+    .announcement-container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 500px;
+      margin-top: 150px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .announcement-container input[type="password"], .announcement-container input[type="text"] {
+      width: 100%;
+      max-width: 300px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin: 10px 0;
+    }
+
+    .announcement-list {
+      width: 100%;
+      max-height: 400px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+
+    .announcement-item {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <button class="home-button" onclick="showHome()">
+      <img src="c:\Users\ko_ta\OneDrive\画像\スクリーンショット\ホーム.png" alt="ホーム" />
+      <span data-i18n="home">ホーム</span>
+    </button>
+    <span id="header-title" data-i18n="appTitle">Train Talk</span>
+  </div>
+
+  <div id="home-page" class="page active">
+    <div class="grid-container">
+      <div class="grid-item" onclick="showChat()"><img src="c:\Users\ko_ta\OneDrive\画像\スクリーンショット\会話.png" alt="会話" /><br><span data-i18n="chat">会話</span></div>
+      <div class="grid-item"><img src="c:\Users\ko_ta\OneDrive\画像\スクリーンショット\フレンド.png" alt="フレンド" /><br><span data-i18n="friends">フレンド</span></div>
+      <div class="grid-item" onclick="showProfile()"><img id="profile-icon" src="c:\Users\ko_ta\OneDrive\画像\スクリーンショット\プロフィール.png" alt="プロフィール" /><br><span data-i18n="profile">プロフィール</span></div>
+      <div class="grid-item"><img src="c:\Users\ko_ta\OneDrive\画像\スクリーンショット\通知.png" alt="通知" /><br><span data-i18n="notifications">通知</span></div>
+      <div class="grid-item" onclick="showSettings()"><img src="c:\Users\ko_ta\OneDrive\画像\スクリーンショット\設定.png" alt="設定" /><br><span data-i18n="settings">設定</span></div>
+      <div class="grid-item" onclick="showAnnouncement()"><img src="c:\Users\ko_ta\OneDrive\画像\スクリーンショット\お知らせ.png" alt="お知らせ" /><br><span data-i18n="announcements">お知らせ</span></div>
+    </div>
+  </div>
+
+  <div id="chat-page" class="page">
+    <div class="grid-container-2x2">
+      <div class="grid-item"><img src="c:\Users\ko_ta\OneDrive\画像\スクリーンショット\趣味マッチング.png" alt="趣味マッチング" /><br><span data-i18n="hobbyMatching">趣味マッチング</span></div>
+      <div class="grid-item" onclick="openTrends()"><img src="c:\Users\ko_ta\OneDrive\画像\スクリーンショット\トレンド.png" alt="トレンド" /><br><span data-i18n="trends">トレンド</span></div>
+      <div class="grid-item" onclick="showLocalTalk()"><img src="c:\Users\ko_ta\OneDrive\画像\スクリーンショット\ローカルトーク.png" alt="ローカルトーク" /><br><span data-i18n="localTalk">ローカルトーク</span></div>
+      <div class="grid-item" onclick="showSearch()"><img src="c:\Users\ko_ta\OneDrive\画像\スクリーンショット\検索.png" alt="検索" /><br><span data-i18n="search">検索</span></div>
+    </div>
+  </div>
+
+  <div id="local-talk-page" class="page">
+    <button onclick="showChat()" data-i18n="back">⬅ 戻る</button>
+    <div class="local-talk-wrapper">
+      <div class="nearby-users">
+        <h3 data-i18n="nearbyUsers">近くのユーザー</h3>
+        <div id="user-list" class="user-list"></div>
+      </div>
+      <div class="post-container">
+        <textarea id="postText" data-i18n-placeholder="postPlaceholder"></textarea>
+        <button class="post-button" onclick="addPost()" data-i18n="post">投稿する</button>
+      </div>
+      <div class="post-list" id="postList"></div>
+    </div>
+  </div>
+
+  <div id="search-page" class="page">
+    <button onclick="showChat()" data-i18n="back">⬅ 戻る</button>
+    <div class="search-wrapper">
+      <div class="search-container">
+        <input type="text" id="searchInput" data-i18n-placeholder="searchPlaceholder">
+        <button class="search-button" onclick="searchPosts()" data-i18n="search">検索</button>
+      </div>
+      <div class="search-results" id="searchResults"></div>
+    </div>
+  </div>
+
+  <div id="profile-page" class="page">
+    <button onclick="showHome()" data-i18n="back">⬅ 戻る</button>
+    <div class="profile-container">
+      <img id="profile-image" src="c:\Users\ko_ta\OneDrive\画像\スクリーンショット\プロフィール.png" alt="プロフィール画像" />
+      <label for="profile-image-input" data-i18n="selectProfileImage">プロフィール画像を選択</label>
+      <input type="file" id="profile-image-input" accept="image/*">
+      <input type="text" id="username" data-i18n-placeholder="usernamePlaceholder" value="ユーザー">
+      <button onclick="saveProfile()" data-i18n="save">保存</button>
+      <div id="save-message" class="save-message" data-i18n="saved">変更しました！</div>
+    </div>
+  </div>
+
+  <div id="settings-page" class="page">
+    <button onclick="showHome()" data-i18n="back">⬅ 戻る</button>
+    <div class="settings-container">
+      <h3 data-i18n="settings">設定</h3>
+      <label for="language-select" data-i18n="language">言語</label>
+      <select id="language-select" onchange="changeLanguage()">
+        <option value="ja" data-i18n="japanese">日本語</option>
+        <option value="en" data-i18n="english">英語</option>
+      </select>
+      <div id="language-change-message" class="language-change-message" data-i18n="languageChanged">変更しました！</div>
+    </div>
+  </div>
+
+  <div id="announcement-page" class="page">
+    <button onclick="showHome()" data-i18n="back">⬅ 戻る</button>
+    <div class="announcement-container">
+      <h3 data-i18n="announcements">お知らせ</h3>
+      <div id="admin-section" style="display: none;">
+        <input type="password" id="admin-password" data-i18n-placeholder="adminPasswordPlaceholder">
+        <button class="post-button" onclick="verifyAdmin()" data-i18n="adminLogin">管理者ログイン</button>
+        <div id="admin-controls" style="display: none;">
+          <textarea id="announcement-text" data-i18n-placeholder="announcementPlaceholder"></textarea>
+          <button class="post-button" onclick="postAnnouncement()" data-i18n="postAnnouncement">お知らせ投稿</button>
+          <button class="post-button" onclick="showChangePassword()" data-i18n="changePassword">パスワード変更</button>
+          <div id="change-password-section" style="display: none;">
+            <input type="password" id="new-password" data-i18n-placeholder="newPasswordPlaceholder">
+            <button class="post-button" onclick="changePassword()" data-i18n="savePassword">パスワードを保存</button>
+          </div>
+        </div>
+      </div>
+      <button class="post-button" onclick="showAdminSection()" data-i18n="adminMode">管理者モード</button>
+      <div id="announcement-list" class="announcement-list"></div>
+    </div>
+  </div>
+
+  <script>
+    // 言語データ
+    const languageData = {
+      ja: {
+        appTitle: "Train Talk",
+        home: "ホーム",
+        chat: "会話",
+        friends: "フレンド",
+        profile: "プロフィール",
+        notifications: "通知",
+        settings: "設定",
+        announcements: "お知らせ",
+        hobbyMatching: "趣味マッチング",
+        trends: "トレンド",
+        localTalk: "ローカルトーク",
+        search: "検索",
+        back: "⬅ 戻る",
+        nearbyUsers: "近くのユーザー",
+        postPlaceholder: "今何してる？",
+        post: "投稿する",
+        reply: "返信",
+        like: "いいね",
+        selectProfileImage: "プロフィール画像を選択",
+        usernamePlaceholder: "ユーザー名を入力",
+        save: "保存",
+        saved: "変更しました！",
+        language: "言語",
+        japanese: "日本語",
+        english: "英語",
+        adminPasswordPlaceholder: "管理者パスワード",
+        adminLogin: "管理者ログイン",
+        adminMode: "管理者モード",
+        announcementPlaceholder: "お知らせを入力",
+        postAnnouncement: "お知らせ投稿",
+        changePassword: "パスワード変更",
+        newPasswordPlaceholder: "新しいパスワード",
+        savePassword: "パスワードを保存",
+        searchPlaceholder: "投稿を検索",
+        noNearbyUsers: "近くにユーザーがいません。",
+        geolocationError: "位置情報の取得に失敗しました: ",
+        noGeolocation: "このブラウザは位置情報をサポートしていません。",
+        noAnnouncements: "お知らせはありません。",
+        emptyAnnouncement: "お知らせの内容を入力してください。",
+        announcementPosted: "お知らせを投稿しました。",
+        announcementSaveError: "お知らせの保存に失敗しました: ",
+        invalidPassword: "パスワードが間違っています。",
+        emptyNewPassword: "新しいパスワードを入力してください。",
+        passwordChanged: "パスワードを変更しました。",
+        passwordSaveError: "パスワードの保存に失敗しました: ",
+        noSearchResults: "検索結果がありません。",
+        searchResults: "検索結果",
+        trendsError: "ニュースサイトを開けませんでした。ポップアップブロッカーを確認してください。",
+        languageChanged: "変更しました！"
+      },
+      en: {
+        appTitle: "Train Talk",
+        home: "Home",
+        chat: "Chat",
+        friends: "Friends",
+        profile: "Profile",
+        notifications: "Notifications",
+        settings: "Settings",
+        announcements: "Announcements",
+        hobbyMatching: "Hobby Matching",
+        trends: "Trends",
+        localTalk: "Local Talk",
+        search: "Search",
+        back: "⬅ Back",
+        nearbyUsers: "Nearby Users",
+        postPlaceholder: "What's up?",
+        post: "Post",
+        reply: "Reply",
+        like: "Like",
+        selectProfileImage: "Select Profile Image",
+        usernamePlaceholder: "Enter username",
+        save: "Save",
+        saved: "Changed!",
+        language: "Language",
+        japanese: "Japanese",
+        english: "English",
+        adminPasswordPlaceholder: "Admin Password",
+        adminLogin: "Admin Login",
+        adminMode: "Admin Mode",
+        announcementPlaceholder: "Enter announcement",
+        postAnnouncement: "Post Announcement",
+        changePassword: "Change Password",
+        newPasswordPlaceholder: "New Password",
+        savePassword: "Save Password",
+        searchPlaceholder: "Search posts",
+        noNearbyUsers: "No users nearby.",
+        geolocationError: "Failed to get location: ",
+        noGeolocation: "This browser does not support geolocation.",
+        noAnnouncements: "No announcements.",
+        emptyAnnouncement: "Please enter the announcement content.",
+        announcementPosted: "Announcement posted.",
+        announcementSaveError: "Failed to save announcement: ",
+        invalidPassword: "Incorrect password.",
+        emptyNewPassword: "Please enter a new password.",
+        passwordChanged: "Password changed.",
+        passwordSaveError: "Failed to save password: ",
+        noSearchResults: "No search results.",
+        searchResults: "Search Results",
+        trendsError: "Could not open news site. Please check your popup blocker.",
+        languageChanged: "Changed!"
+      }
+    };
+
+    // 初期パスワード設定
+    if (!localStorage.getItem('adminPassword')) {
+      localStorage.setItem('adminPassword', 'admin123');
+    }
+
+    // 言語初期化
+    let currentLanguage = localStorage.getItem('language') || 'ja';
+    document.getElementById('language-select').value = currentLanguage;
+
+    // UIテキスト更新
+    function updateUIText() {
+      document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        element.innerText = languageData[currentLanguage][key] || element.innerText;
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+        const key = element.getAttribute('data-i18n-placeholder');
+        element.placeholder = languageData[currentLanguage][key] || element.placeholder;
+      });
+    }
+
+    // 言語変更
+    function changeLanguage() {
+      currentLanguage = document.getElementById('language-select').value;
+      localStorage.setItem('language', currentLanguage);
+      updateUIText();
+      document.getElementById('header-title').innerText = languageData[currentLanguage].appTitle;
+      showLanguageChangeMessage();
+    }
+
+    // 言語変更メッセージ表示
+    function showLanguageChangeMessage() {
+      const message = document.getElementById('language-change-message');
+      message.classList.add('show');
+      setTimeout(() => {
+        message.classList.remove('show');
+      }, 2000);
+    }
+
+    // トレンドページ（ニュースサイト）を開く
+    function openTrends() {
+      console.log("トレンドボタンがクリックされました。言語: " + currentLanguage);
+      const newsUrl = currentLanguage === 'ja' ? 'https://news.google.com/?hl=ja' : 'https://news.google.com/?hl=en-US';
+      console.log("開こうとしているURL: " + newsUrl);
+      try {
+        const newWindow = window.open(newsUrl, '_blank');
+        if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+          alert(languageData[currentLanguage].trendsError);
+          window.location.href = newsUrl;
+        }
+      } catch (error) {
+        console.error("トレンドリンクエラー: ", error);
+        alert(languageData[currentLanguage].trendsError + " " + error.message);
+        window.location.href = newsUrl;
+      }
+    }
+
+    // ダミーのユーザーデータ
+    const dummyUsers = [
+      { id: 1, name: "ユーザーA", lat: 35.6895, lon: 139.6917, distance: 0 }, // 東京
+      { id: 2, name: "ユーザーB", lat: 35.6890, lon: 139.6920, distance: 0 },
+      { id: 3, name: "ユーザーC", lat: 35.6900, lon: 139.6900, distance: 0 }
+    ];
+
+    // ハバーサイン公式で距離計算（km）
+    function calculateDistance(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+
+    // 近くのユーザー表示
+    function showNearbyUsers() {
+      if (!navigator.geolocation) {
+        alert(languageData[currentLanguage].noGeolocation);
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const userLat = position.coords.latitude;
+          const userLon = position.coords.longitude;
+
+          const userList = document.getElementById("user-list");
+          userList.innerHTML = "";
+
+          dummyUsers.forEach(user => {
+            user.distance = calculateDistance(userLat, userLon, user.lat, user.lon);
+            if (user.distance <= 5) {
+              const userItem = document.createElement("div");
+              userItem.classList.add("user-item");
+              userItem.textContent = `${user.name} (${user.distance.toFixed(2)}km)`;
+              userItem.onclick = () => startChat(user.id, user.name);
+              userList.appendChild(userItem);
+            }
+          });
+
+          if (userList.children.length === 0) {
+            userList.textContent = languageData[currentLanguage].noNearbyUsers;
+          }
+        },
+        (error) => {
+          alert(languageData[currentLanguage].geolocationError + error.message);
+        }
+      );
+    }
+
+    // チャット開始
+    function startChat(userId, userName) {
+      const postList = document.getElementById("postList");
+      postList.innerHTML = `<h3>${userName} とのチャット</h3>`;
+      const chatInput = document.createElement("textarea");
+      chatInput.placeholder = `${userName} にメッセージを送信...`;
+      chatInput.style.width = "100%";
+      chatInput.style.marginTop = "10px";
+      const sendButton = document.createElement("button");
+      sendButton.textContent = languageData[currentLanguage].post;
+      sendButton.className = "post-button";
+      sendButton.onclick = () => {
+        const message = chatInput.value.trim();
+        if (message) {
+          const messageDiv = document.createElement("div");
+          messageDiv.classList.add("post");
+          messageDiv.innerHTML = `
+            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+              <img src="${localStorage.getItem('profileImage') || 'c:\\Users\\ko_ta\\OneDrive\\画像\\スクリーンショット\\プロフィール.png'}" alt="プロフィール画像" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;" />
+              <strong>${localStorage.getItem('username') || (currentLanguage === 'ja' ? 'ユーザー' : 'User')}</strong>
+            </div>
+            <p>${message}</p>
+          `;
+          postList.appendChild(messageDiv);
+          chatInput.value = "";
+        }
+      };
+      postList.appendChild(chatInput);
+      postList.appendChild(sendButton);
+    }
+
+    // 検索ページ表示
+    function showSearch() {
+      document.getElementById("home-page").classList.remove("active");
+      document.getElementById("chat-page").classList.remove("active");
+      document.getElementById("local-talk-page").classList.remove("active");
+      document.getElementById("profile-page").classList.remove("active");
+      document.getElementById("settings-page").classList.remove("active");
+      document.getElementById("announcement-page").classList.remove("active");
+      document.getElementById("search-page").classList.add("active");
+      document.getElementById("header-title").innerText = languageData[currentLanguage].search;
+      document.getElementById("searchResults").innerHTML = "";
+    }
+
+    // 投稿検索
+    function searchPosts() {
+      const query = document.getElementById("searchInput").value.trim().toLowerCase();
+      const searchResults = document.getElementById("searchResults");
+      searchResults.innerHTML = `<h3>${languageData[currentLanguage].searchResults}</h3>`;
+
+      const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+      const filteredPosts = posts.filter(post => post.text.toLowerCase().includes(query));
+
+      if (filteredPosts.length === 0) {
+        searchResults.innerHTML += `<p>${languageData[currentLanguage].noSearchResults}</p>`;
+        return;
+      }
+
+      filteredPosts.forEach(post => {
+        const postDiv = document.createElement("div");
+        postDiv.classList.add("post");
+        postDiv.innerHTML = `
+          <div style="display: flex; align-items: center; margin-bottom: 10px;">
+            <img src="${post.profileImage || 'c:\\Users\\ko_ta\\OneDrive\\画像\\スクリーンショット\\プロフィール.png'}" alt="プロフィール画像" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;" />
+            <strong>${post.username}</strong>
+          </div>
+          <p>${post.text}</p>
+          <small>${post.date}</small>
+        `;
+        searchResults.appendChild(postDiv);
+      });
+    }
+
+    // お知らせページ表示
+    function showAnnouncement() {
+      document.getElementById("home-page").classList.remove("active");
+      document.getElementById("chat-page").classList.remove("active");
+      document.getElementById("local-talk-page").classList.remove("active");
+      document.getElementById("profile-page").classList.remove("active");
+      document.getElementById("settings-page").classList.remove("active");
+      document.getElementById("search-page").classList.remove("active");
+      document.getElementById("announcement-page").classList.add("active");
+      document.getElementById("header-title").innerText = languageData[currentLanguage].announcements;
+      loadAnnouncements();
+    }
+
+    // 管理者モード表示
+    function showAdminSection() {
+      console.log("管理者モードボタンがクリックされました");
+      const adminSection = document.getElementById("admin-section");
+      adminSection.style.display = "block";
+      document.getElementById("admin-password").style.display = "block";
+      document.getElementById("admin-section").querySelector("button").style.display = "block";
+      document.getElementById("admin-controls").style.display = "none";
+    }
+
+    // 管理者認証
+    function verifyAdmin() {
+      console.log("管理者ログインが試行されました");
+      const password = document.getElementById("admin-password").value.trim();
+      const storedPassword = localStorage.getItem('adminPassword');
+      if (password === storedPassword) {
+        console.log("認証成功");
+        document.getElementById("admin-password").style.display = "none";
+        document.getElementById("admin-section").querySelector("button").style.display = "none";
+        document.getElementById("admin-controls").style.display = "block";
+      } else {
+        console.log("認証失敗: 入力=" + password + ", 期待=" + storedPassword);
+        alert(languageData[currentLanguage].invalidPassword);
+      }
+    }
+
+    // パスワード変更フォーム表示
+    function showChangePassword() {
+      console.log("パスワード変更ボタンがクリックされました");
+      document.getElementById("change-password-section").style.display = "block";
+    }
+
+    // パスワード変更
+    function changePassword() {
+      console.log("パスワード保存が試行されました");
+      const newPassword = document.getElementById("new-password").value.trim();
+      if (!newPassword) {
+        alert(languageData[currentLanguage].emptyNewPassword);
+        return;
+      }
+      try {
+        localStorage.setItem('adminPassword', newPassword);
+        document.getElementById("new-password").value = "";
+        document.getElementById("change-password-section").style.display = "none";
+        alert(languageData[currentLanguage].passwordChanged);
+      } catch (e) {
+        alert(languageData[currentLanguage].passwordSaveError + e.message);
+      }
+    }
+
+    // お知らせ投稿
+    function postAnnouncement() {
+      console.log("お知らせ投稿が試行されました");
+      const announcementText = document.getElementById("announcement-text").value.trim();
+      if (!announcementText) {
+        alert(languageData[currentLanguage].emptyAnnouncement);
+        return;
+      }
+      const announcements = JSON.parse(localStorage.getItem('announcements') || '[]');
+      announcements.unshift({
+        id: Date.now(),
+        text: announcementText,
+        date: new Date().toLocaleString(currentLanguage === 'ja' ? 'ja-JP' : 'en-US')
+      });
+      try {
+        localStorage.setItem('announcements', JSON.stringify(announcements));
+        document.getElementById("announcement-text").value = "";
+        loadAnnouncements();
+        alert(languageData[currentLanguage].announcementPosted);
+      } catch (e) {
+        alert(languageData[currentLanguage].announcementSaveError + e.message);
+      }
+    }
+
+    // お知らせ読み込み
+    function loadAnnouncements() {
+      const announcementList = document.getElementById("announcement-list");
+      announcementList.innerHTML = "";
+      const announcements = JSON.parse(localStorage.getItem('announcements') || '[]');
+      if (announcements.length === 0) {
+        announcementList.textContent = languageData[currentLanguage].noAnnouncements;
+        return;
+      }
+      announcements.forEach(announcement => {
+        const item = document.createElement("div");
+        item.classList.add("announcement-item");
+        item.innerHTML = `
+          <p>${announcement.text}</p>
+          <small>${announcement.date}</small>
+        `;
+        announcementList.appendChild(item);
+      });
+    }
+
+    // 初期プロフィールロード
+    window.onload = function() {
+      const savedUsername = localStorage.getItem('username');
+      const savedProfileImage = localStorage.getItem('profileImage');
+      if (savedUsername) {
+        document.getElementById('username').value = savedUsername;
+      }
+      if (savedProfileImage) {
+        document.getElementById('profile-image').src = savedProfileImage;
+      }
+      updateUIText();
+    };
+
+    // 画像選択時にプレビュー更新
+    document.getElementById('profile-image-input').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('profile-image').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function showChat() {
+      document.getElementById("home-page").classList.remove("active");
+      document.getElementById("chat-page").classList.add("active");
+      document.getElementById("local-talk-page").classList.remove("active");
+      document.getElementById("profile-page").classList.remove("active");
+      document.getElementById("settings-page").classList.remove("active");
+      document.getElementById("announcement-page").classList.remove("active");
+      document.getElementById("search-page").classList.remove("active");
+      document.getElementById("header-title").innerText = languageData[currentLanguage].chat;
+    }
+
+    function showHome() {
+      document.getElementById("chat-page").classList.remove("active");
+      document.getElementById("local-talk-page").classList.remove("active");
+      document.getElementById("profile-page").classList.remove("active");
+      document.getElementById("settings-page").classList.remove("active");
+      document.getElementById("announcement-page").classList.remove("active");
+      document.getElementById("search-page").classList.remove("active");
+      document.getElementById("home-page").classList.add("active");
+      document.getElementById("header-title").innerText = languageData[currentLanguage].appTitle;
+    }
+
+    function showLocalTalk() {
+      document.getElementById("chat-page").classList.remove("active");
+      document.getElementById("local-talk-page").classList.add("active");
+      document.getElementById("profile-page").classList.remove("active");
+      document.getElementById("settings-page").classList.remove("active");
+      document.getElementById("announcement-page").classList.remove("active");
+      document.getElementById("search-page").classList.remove("active");
+      document.getElementById("header-title").innerText = languageData[currentLanguage].localTalk;
+      showNearbyUsers();
+    }
+
+    function showProfile() {
+      document.getElementById("home-page").classList.remove("active");
+      document.getElementById("chat-page").classList.remove("active");
+      document.getElementById("local-talk-page").classList.remove("active");
+      document.getElementById("settings-page").classList.remove("active");
+      document.getElementById("announcement-page").classList.remove("active");
+      document.getElementById("search-page").classList.remove("active");
+      document.getElementById("profile-page").classList.add("active");
+      document.getElementById("header-title").innerText = languageData[currentLanguage].profile;
+    }
+
+    function showSettings() {
+      document.getElementById("home-page").classList.remove("active");
+      document.getElementById("chat-page").classList.remove("active");
+      document.getElementById("local-talk-page").classList.remove("active");
+      document.getElementById("profile-page").classList.remove("active");
+      document.getElementById("announcement-page").classList.remove("active");
+      document.getElementById("search-page").classList.remove("active");
+      document.getElementById("settings-page").classList.add("active");
+      document.getElementById("header-title").innerText = languageData[currentLanguage].settings;
+    }
+
+    function addPost() {
+      let postText = document.getElementById("postText").value;
+      if (postText.trim() === "") return;
+
+      let postList = document.getElementById("postList");
+      let newPost = document.createElement("div");
+      newPost.classList.add("post");
+      const username = localStorage.getItem('username') || (currentLanguage === 'ja' ? 'ユーザー' : 'User');
+      const profileImage = localStorage.getItem('profileImage') || 'c:\\Users\\ko_ta\\OneDrive\\画像\\スクリーンショット\\プロフィール.png';
+      const postDate = new Date().toLocaleString(currentLanguage === 'ja' ? 'ja-JP' : 'en-US');
+      newPost.innerHTML = `
+        <div style="display: flex; align-items: center; margin-bottom: 10px;">
+          <img src="${profileImage}" alt="プロフィール画像" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;" />
+          <strong>${username}</strong>
+        </div>
+        <p>${postText}</p>
+        <button class="reply-button" onclick="replyToPost(this)">${languageData[currentLanguage].reply}</button>
+        <button class="like-button" onclick="toggleLike(this)">${languageData[currentLanguage].like}</button>
+        <span class="like-count">0 ${languageData[currentLanguage].like}</span>
+        <div class="reply-section" style="margin-top:10px;"></div>
+      `;
+      postList.prepend(newPost);
+
+      // 投稿をlocalStorageに保存
+      const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+      posts.unshift({
+        id: Date.now(),
+        username: username,
+        profileImage: profileImage,
+        text: postText,
+        date: postDate
+      });
+      try {
+        localStorage.setItem('posts', JSON.stringify(posts));
+      } catch (e) {
+        console.error("投稿の保存に失敗しました: ", e);
+      }
+
+      document.getElementById("postText").value = "";
+    }
+
+    function toggleLike(button) {
+      const countSpan = button.nextElementSibling;
+      let current = parseInt(countSpan.textContent);
+      if (button.classList.contains("liked")) {
+        countSpan.textContent = `${current - 1} ${languageData[currentLanguage].like}`;
+        button.classList.remove("liked");
+      } else {
+        countSpan.textContent = `${current + 1} ${languageData[currentLanguage].like}`;
+        button.classList.add("liked");
+      }
+    }
+
+    function replyToPost(button) {
+      const post = button.closest(".post");
+      const replySection = post.querySelector(".reply-section");
+
+      if (replySection.querySelector("textarea")) return;
+
+      const textarea = document.createElement("textarea");
+      textarea.placeholder = languageData[currentLanguage].reply;
+      textarea.style = "width:100%; margin-top:10px;";
+      const sendBtn = document.createElement("button");
+      sendBtn.textContent = languageData[currentLanguage].post;
+      sendBtn.className = "post-button";
+      sendBtn.style = "margin-top:5px;";
+      sendBtn.onclick = () => {
+        const replyText = textarea.value.trim();
+        if (replyText) {
+          const replyP = document.createElement("p");
+          replyP.style = "margin-left: 20px; background: #eef; padding: 5px; border-radius: 5px;";
+          const username = localStorage.getItem('username') || (currentLanguage === 'ja' ? 'ユーザー' : 'User');
+          replyP.textContent = `${username}: ${replyText}`;
+          replySection.appendChild(replyP);
+          textarea.remove();
+          sendBtn.remove();
+        }
+      };
+
+      replySection.appendChild(textarea);
+      replySection.appendChild(sendBtn);
+    }
+
+    function saveProfile() {
+      const username = document.getElementById('username').value.trim();
+      const profileImageInput = document.getElementById('profile-image-input');
+      const profileImage = document.getElementById('profile-image');
+      const saveMessage = document.getElementById('save-message');
+
+      let saved = false;
+
+      if (username) {
+        localStorage.setItem('username', username);
+        saved = true;
+      }
+
+      if (profileImageInput.files && profileImageInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          profileImage.src = e.target.result;
+          localStorage.setItem('profileImage', e.target.result);
+          showSaveMessage();
+        };
+        reader.readAsDataURL(profileImageInput.files[0]);
+        saved = true;
+      }
+
+      if (saved && !profileImageInput.files) {
+        showSaveMessage();
+      }
+    }
+
+    function showSaveMessage() {
+      const saveMessage = document.getElementById('save-message');
+      saveMessage.classList.add('show');
+      setTimeout(() => {
+        saveMessage.classList.remove('show');
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
