@@ -31,64 +31,49 @@
       align-items: center;
     }
 
-    .home-button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: absolute;
-      top: 70px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-
-    .home-button img {
-      width: 80px;
-      height: 80px;
-    }
-
-    .home-button span {
-      font-size: 16px;
-      color: black;
-      margin-top: 5px;
-    }
-
-    .grid-container, .grid-container-2x2 {
-      display: grid;
-      gap: 15px;
-      width: 90%;
-      max-width: 500px;
-    }
-
     .grid-container {
-      grid-template-columns: repeat(3, 1fr);
-      margin-top: 200px;
-    }
-
-    .grid-container-2x2 {
-      grid-template-columns: repeat(2, 1fr);
-      margin-top: 200px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(2, auto);
+      gap: 8px;
+      width: 90%;
+      max-width: 1000px;
+      margin-top: 80px;
     }
 
     .grid-item {
       background: white;
-      padding: 20px;
+      padding: 8px;
       text-align: center;
-      border-radius: 10px;
-      box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+      border-radius: 5px;
+      box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
       cursor: pointer;
-      transition: transform 0.2s;
+      transition: background-color 0.2s, transform 0.2s;
+      min-height: 80px;
+      min-width: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .grid-item:hover {
+      background-color: #e0f0ff;
     }
 
     .grid-item:active {
-      transform: scale(0.95);
+      transform: scale(0.98);
     }
 
     .grid-item img {
-      width: 40px;
-      height: 40px;
+      width: 30px;
+      height: 30px;
+      margin-bottom: 5px;
+    }
+
+    .grid-item span {
+      font-size: 13px;
+      white-space: nowrap;
     }
 
     .page {
@@ -99,15 +84,33 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      width: 100%;
     }
 
-    .local-talk-wrapper, .search-wrapper {
+    .back-button {
+      position: absolute;
+      top: 60px;
+      left: 10px;
+      background: #007bff;
+      color: white;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      z-index: 999;
+    }
+
+    .local-talk-wrapper {
       display: flex;
       flex-direction: column;
       gap: 20px;
       width: 90%;
       max-width: 500px;
-      margin-top: 150px;
+      margin-top: 100px;
     }
 
     .nearby-users {
@@ -146,7 +149,7 @@
       width: 100%;
     }
 
-    .post-list, .search-results {
+    .post-list {
       background: white;
       padding: 15px;
       border-radius: 10px;
@@ -197,6 +200,23 @@
       color: #007bff;
       cursor: pointer;
       margin-right: 10px;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: color 0.2s;
+    }
+
+    .like-button.liked {
+      color: #ff0000;
+    }
+
+    .like-button .heart-emoji {
+      font-size: 14px;
+    }
+
+    .reply-button .reply-emoji {
+      font-size: 14px;
     }
 
     .like-count {
@@ -211,7 +231,7 @@
       box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
       width: 90%;
       max-width: 400px;
-      margin-top: 150px;
+      margin-top: 100px;
       text-align: center;
       display: flex;
       flex-direction: column;
@@ -283,7 +303,7 @@
       box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
       width: 90%;
       max-width: 500px;
-      margin-top: 150px;
+      margin-top: 100px;
       text-align: center;
       display: flex;
       flex-direction: column;
@@ -319,36 +339,29 @@
 <body>
 
   <div class="header">
-    <button class="home-button" onclick="showHome()">
-      <img src="ホーム.png" alt="ホーム" />
-      <span data-i18n="home">ホーム</span>
-    </button>
     <span id="header-title" data-i18n="appTitle">Train Talk</span>
   </div>
 
   <div id="home-page" class="page active">
     <div class="grid-container">
-      <div class="grid-item" onclick="showChat()"><img src="会話.png" alt="会話" /><br><span data-i18n="chat">会話</span></div>
       <div class="grid-item"><img src="フレンド.png" alt="フレンド" /><br><span data-i18n="friends">フレンド</span></div>
       <div class="grid-item" onclick="showProfile()"><img id="profile-icon" src="プロフィール.png" alt="プロフィール" /><br><span data-i18n="profile">プロフィール</span></div>
       <div class="grid-item"><img src="通知.png" alt="通知" /><br><span data-i18n="notifications">通知</span></div>
       <div class="grid-item" onclick="showSettings()"><img src="設定.png" alt="設定" /><br><span data-i18n="settings">設定</span></div>
       <div class="grid-item" onclick="showAnnouncement()"><img src="お知らせ.png" alt="お知らせ" /><br><span data-i18n="announcements">お知らせ</span></div>
-    </div>
-  </div>
-
-  <div id="chat-page" class="page">
-    <div class="grid-container-2x2">
       <div class="grid-item"><img src="趣味マッチング.png" alt="趣味マッチング" /><br><span data-i18n="hobbyMatching">趣味マッチング</span></div>
       <div class="grid-item" onclick="openTrends()"><img src="トレンド.png" alt="トレンド" /><br><span data-i18n="trends">トレンド</span></div>
       <div class="grid-item" onclick="showLocalTalk()"><img src="ローカルトーク.png" alt="ローカルトーク" /><br><span data-i18n="localTalk">ローカルトーク</span></div>
-      <div class="grid-item" onclick="showSearch()"><img src="検索.png" alt="検索" /><br><span data-i18n="search">検索</span></div>
     </div>
   </div>
 
   <div id="local-talk-page" class="page">
-    <button onclick="showChat()" data-i18n="back">⬅ 戻る</button>
+    <button class="back-button" onclick="showHome()"><span>⬅</span><span data-i18n="back">戻る</span></button>
     <div class="local-talk-wrapper">
+      <div class="search-container">
+        <input type="text" id="searchInput" data-i18n-placeholder="searchPlaceholder">
+        <button class="search-button" onclick="searchPosts()" data-i18n="search">検索</button>
+      </div>
       <div class="nearby-users">
         <h3 data-i18n="nearbyUsers">近くのユーザー</h3>
         <div id="user-list" class="user-list"></div>
@@ -361,19 +374,8 @@
     </div>
   </div>
 
-  <div id="search-page" class="page">
-    <button onclick="showChat()" data-i18n="back">⬅ 戻る</button>
-    <div class="search-wrapper">
-      <div class="search-container">
-        <input type="text" id="searchInput" data-i18n-placeholder="searchPlaceholder">
-        <button class="search-button" onclick="searchPosts()" data-i18n="search">検索</button>
-      </div>
-      <div class="search-results" id="searchResults"></div>
-    </div>
-  </div>
-
   <div id="profile-page" class="page">
-    <button onclick="showHome()" data-i18n="back">⬅ 戻る</button>
+    <button class="back-button" onclick="showHome()"><span>⬅</span><span data-i18n="back">戻る</span></button>
     <div class="profile-container">
       <img id="profile-image" src="プロフィール.png" alt="プロフィール画像" />
       <label for="profile-image-input" data-i18n="selectProfileImage">プロフィール画像を選択</label>
@@ -385,7 +387,7 @@
   </div>
 
   <div id="settings-page" class="page">
-    <button onclick="showHome()" data-i18n="back">⬅ 戻る</button>
+    <button class="back-button" onclick="showHome()"><span>⬅</span><span data-i18n="back">戻る</span></button>
     <div class="settings-container">
       <h3 data-i18n="settings">設定</h3>
       <label for="language-select" data-i18n="language">言語</label>
@@ -398,7 +400,7 @@
   </div>
 
   <div id="announcement-page" class="page">
-    <button onclick="showHome()" data-i18n="back">⬅ 戻る</button>
+    <button class="back-button" onclick="showHome()"><span>⬅</span><span data-i18n="back">戻る</span></button>
     <div class="announcement-container">
       <h3 data-i18n="announcements">お知らせ</h3>
       <div id="admin-section" style="display: none;">
@@ -424,8 +426,6 @@
     const languageData = {
       ja: {
         appTitle: "Train Talk",
-        home: "ホーム",
-        chat: "会話",
         friends: "フレンド",
         profile: "プロフィール",
         notifications: "通知",
@@ -434,13 +434,16 @@
         hobbyMatching: "趣味マッチング",
         trends: "トレンド",
         localTalk: "ローカルトーク",
-        search: "検索",
-        back: "⬅ 戻る",
+        back: "戻る",
         nearbyUsers: "近くのユーザー",
         postPlaceholder: "今何してる？",
         post: "投稿する",
         reply: "返信",
         like: "いいね",
+        search: "検索",
+        searchPlaceholder: "投稿を検索",
+        noSearchResults: "検索結果がありません。",
+        searchResults: "検索結果",
         selectProfileImage: "プロフィール画像を選択",
         usernamePlaceholder: "ユーザー名を入力",
         save: "保存",
@@ -456,7 +459,6 @@
         changePassword: "パスワード変更",
         newPasswordPlaceholder: "新しいパスワード",
         savePassword: "パスワードを保存",
-        searchPlaceholder: "投稿を検索",
         noNearbyUsers: "近くにユーザーがいません。",
         geolocationError: "位置情報の取得に失敗しました: ",
         noGeolocation: "このブラウザは位置情報をサポートしていません。",
@@ -468,15 +470,11 @@
         emptyNewPassword: "新しいパスワードを入力してください。",
         passwordChanged: "パスワードを変更しました。",
         passwordSaveError: "パスワードの保存に失敗しました: ",
-        noSearchResults: "検索結果がありません。",
-        searchResults: "検索結果",
         trendsError: "ニュースサイトを開けませんでした。ポップアップブロッカーを確認してください。",
         languageChanged: "変更しました！"
       },
       en: {
         appTitle: "Train Talk",
-        home: "Home",
-        chat: "Chat",
         friends: "Friends",
         profile: "Profile",
         notifications: "Notifications",
@@ -485,13 +483,16 @@
         hobbyMatching: "Hobby Matching",
         trends: "Trends",
         localTalk: "Local Talk",
-        search: "Search",
-        back: "⬅ Back",
+        back: "Back",
         nearbyUsers: "Nearby Users",
         postPlaceholder: "What's up?",
         post: "Post",
         reply: "Reply",
         like: "Like",
+        search: "Search",
+        searchPlaceholder: "Search posts",
+        noSearchResults: "No search results.",
+        searchResults: "Search Results",
         selectProfileImage: "Select Profile Image",
         usernamePlaceholder: "Enter username",
         save: "Save",
@@ -507,7 +508,6 @@
         changePassword: "Change Password",
         newPasswordPlaceholder: "New Password",
         savePassword: "Save Password",
-        searchPlaceholder: "Search posts",
         noNearbyUsers: "No users nearby.",
         geolocationError: "Failed to get location: ",
         noGeolocation: "This browser does not support geolocation.",
@@ -519,8 +519,6 @@
         emptyNewPassword: "Please enter a new password.",
         passwordChanged: "Password changed.",
         passwordSaveError: "Failed to save password: ",
-        noSearchResults: "No search results.",
-        searchResults: "Search Results",
         trendsError: "Could not open news site. Please check your popup blocker.",
         languageChanged: "Changed!"
       }
@@ -544,6 +542,14 @@
       document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
         const key = element.getAttribute('data-i18n-placeholder');
         element.placeholder = languageData[currentLanguage][key] || element.placeholder;
+      });
+      // 投稿済みのボタンのテキストを更新
+      document.querySelectorAll('.reply-button').forEach(button => {
+        button.innerHTML = `${languageData[currentLanguage].reply} <span class="reply-emoji">💬</span>`;
+      });
+      document.querySelectorAll('.like-button').forEach(button => {
+        const isLiked = button.classList.contains('liked');
+        button.innerHTML = `${languageData[currentLanguage].like} <span class="heart-emoji">${isLiked ? '❤️' : '🤍'}</span>`;
       });
     }
 
@@ -669,30 +675,17 @@
       postList.appendChild(sendButton);
     }
 
-    // 検索ページ表示
-    function showSearch() {
-      document.getElementById("home-page").classList.remove("active");
-      document.getElementById("chat-page").classList.remove("active");
-      document.getElementById("local-talk-page").classList.remove("active");
-      document.getElementById("profile-page").classList.remove("active");
-      document.getElementById("settings-page").classList.remove("active");
-      document.getElementById("announcement-page").classList.remove("active");
-      document.getElementById("search-page").classList.add("active");
-      document.getElementById("header-title").innerText = languageData[currentLanguage].search;
-      document.getElementById("searchResults").innerHTML = "";
-    }
-
-    // 投稿検索
+    // 投稿検索（ローカルトークページで使用）
     function searchPosts() {
       const query = document.getElementById("searchInput").value.trim().toLowerCase();
-      const searchResults = document.getElementById("searchResults");
-      searchResults.innerHTML = `<h3>${languageData[currentLanguage].searchResults}</h3>`;
+      const postList = document.getElementById("postList");
+      postList.innerHTML = `<h3>${languageData[currentLanguage].searchResults}</h3>`;
 
       const posts = JSON.parse(localStorage.getItem('posts') || '[]');
       const filteredPosts = posts.filter(post => post.text.toLowerCase().includes(query));
 
       if (filteredPosts.length === 0) {
-        searchResults.innerHTML += `<p>${languageData[currentLanguage].noSearchResults}</p>`;
+        postList.innerHTML += `<p>${languageData[currentLanguage].noSearchResults}</p>`;
         return;
       }
 
@@ -706,19 +699,21 @@
           </div>
           <p>${post.text}</p>
           <small>${post.date}</small>
+          <button class="reply-button" onclick="replyToPost(this)">${languageData[currentLanguage].reply} <span class="reply-emoji">💬</span></button>
+          <button class="like-button" onclick="toggleLike(this)">${languageData[currentLanguage].like} <span class="heart-emoji">🤍</span></button>
+          <span class="like-count">0 ${languageData[currentLanguage].like}</span>
+          <div class="reply-section" style="margin-top:10px;"></div>
         `;
-        searchResults.appendChild(postDiv);
+        postList.appendChild(postDiv);
       });
     }
 
     // お知らせページ表示
     function showAnnouncement() {
       document.getElementById("home-page").classList.remove("active");
-      document.getElementById("chat-page").classList.remove("active");
       document.getElementById("local-talk-page").classList.remove("active");
       document.getElementById("profile-page").classList.remove("active");
       document.getElementById("settings-page").classList.remove("active");
-      document.getElementById("search-page").classList.remove("active");
       document.getElementById("announcement-page").classList.add("active");
       document.getElementById("header-title").innerText = languageData[currentLanguage].announcements;
       loadAnnouncements();
@@ -843,57 +838,41 @@
       }
     });
 
-    function showChat() {
-      document.getElementById("home-page").classList.remove("active");
-      document.getElementById("chat-page").classList.add("active");
-      document.getElementById("local-talk-page").classList.remove("active");
-      document.getElementById("profile-page").classList.remove("active");
-      document.getElementById("settings-page").classList.remove("active");
-      document.getElementById("announcement-page").classList.remove("active");
-      document.getElementById("search-page").classList.remove("active");
-      document.getElementById("header-title").innerText = languageData[currentLanguage].chat;
-    }
-
     function showHome() {
-      document.getElementById("chat-page").classList.remove("active");
       document.getElementById("local-talk-page").classList.remove("active");
       document.getElementById("profile-page").classList.remove("active");
       document.getElementById("settings-page").classList.remove("active");
       document.getElementById("announcement-page").classList.remove("active");
-      document.getElementById("search-page").classList.remove("active");
       document.getElementById("home-page").classList.add("active");
       document.getElementById("header-title").innerText = languageData[currentLanguage].appTitle;
     }
 
     function showLocalTalk() {
-      document.getElementById("chat-page").classList.remove("active");
-      document.getElementById("local-talk-page").classList.add("active");
+      document.getElementById("home-page").classList.remove("active");
       document.getElementById("profile-page").classList.remove("active");
       document.getElementById("settings-page").classList.remove("active");
       document.getElementById("announcement-page").classList.remove("active");
-      document.getElementById("search-page").classList.remove("active");
+      document.getElementById("local-talk-page").classList.add("active");
       document.getElementById("header-title").innerText = languageData[currentLanguage].localTalk;
+      document.getElementById("searchInput").value = "";
+      document.getElementById("postList").innerHTML = "";
       showNearbyUsers();
     }
 
     function showProfile() {
       document.getElementById("home-page").classList.remove("active");
-      document.getElementById("chat-page").classList.remove("active");
       document.getElementById("local-talk-page").classList.remove("active");
       document.getElementById("settings-page").classList.remove("active");
       document.getElementById("announcement-page").classList.remove("active");
-      document.getElementById("search-page").classList.remove("active");
       document.getElementById("profile-page").classList.add("active");
       document.getElementById("header-title").innerText = languageData[currentLanguage].profile;
     }
 
     function showSettings() {
       document.getElementById("home-page").classList.remove("active");
-      document.getElementById("chat-page").classList.remove("active");
       document.getElementById("local-talk-page").classList.remove("active");
       document.getElementById("profile-page").classList.remove("active");
       document.getElementById("announcement-page").classList.remove("active");
-      document.getElementById("search-page").classList.remove("active");
       document.getElementById("settings-page").classList.add("active");
       document.getElementById("header-title").innerText = languageData[currentLanguage].settings;
     }
@@ -914,8 +893,9 @@
           <strong>${username}</strong>
         </div>
         <p>${postText}</p>
-        <button class="reply-button" onclick="replyToPost(this)">${languageData[currentLanguage].reply}</button>
-        <button class="like-button" onclick="toggleLike(this)">${languageData[currentLanguage].like}</button>
+        <small>${postDate}</small>
+        <button class="reply-button" onclick="replyToPost(this)">${languageData[currentLanguage].reply} <span class="reply-emoji">💬</span></button>
+        <button class="like-button" onclick="toggleLike(this)">${languageData[currentLanguage].like} <span class="heart-emoji">🤍</span></button>
         <span class="like-count">0 ${languageData[currentLanguage].like}</span>
         <div class="reply-section" style="margin-top:10px;"></div>
       `;
@@ -941,12 +921,15 @@
 
     function toggleLike(button) {
       const countSpan = button.nextElementSibling;
+      const heartEmoji = button.querySelector('.heart-emoji');
       let current = parseInt(countSpan.textContent);
       if (button.classList.contains("liked")) {
         countSpan.textContent = `${current - 1} ${languageData[currentLanguage].like}`;
+        heartEmoji.textContent = '🤍';
         button.classList.remove("liked");
       } else {
         countSpan.textContent = `${current + 1} ${languageData[currentLanguage].like}`;
+        heartEmoji.textContent = '❤️';
         button.classList.add("liked");
       }
     }
