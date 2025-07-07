@@ -109,7 +109,7 @@
       background-color: #0056b3;
     }
 
-    .local-talk-wrapper {
+    .local-talk-wrapper, .hobby-matching-wrapper {
       display: flex;
       flex-direction: column;
       gap: 20px;
@@ -118,7 +118,7 @@
       margin-top: 100px;
     }
 
-    .nearby-users {
+    .nearby-users, .matching-users {
       background: white;
       padding: 15px;
       border-radius: 10px;
@@ -126,7 +126,7 @@
       width: 100%;
     }
 
-    .nearby-users h3 {
+    .nearby-users h3, .matching-users h3 {
       margin: 0 0 10px;
       font-size: 18px;
     }
@@ -209,7 +209,7 @@
       position: relative;
     }
 
-    .reply-button, .like-button {
+    .reply-button, .like-button, .friend-request-button, .accept-friend-button {
       background: none;
       border: none;
       color: #007bff;
@@ -262,7 +262,17 @@
       border: 2px solid #ccc;
     }
 
-    .profile-container input[type="text"], .settings-container select {
+    .profile-container input[type="text"], .settings-container select, .profile-container select {
+      width: 100%;
+      max-width: 300px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin: 10px 0;
+    }
+
+    .profile-container textarea {
       width: 100%;
       max-width: 300px;
       padding: 10px;
@@ -302,7 +312,7 @@
       display: block;
     }
 
-    .save-message, .language-change-message {
+    .save-message, .language-change-message, .friend-request-message {
       display: none;
       color: #28a745;
       font-size: 16px;
@@ -311,7 +321,7 @@
       transition: opacity 0.5s ease-in-out;
     }
 
-    .save-message.show, .language-change-message.show {
+    .save-message.show, .language-change-message.show, .friend-request-message.show {
       display: block;
       opacity: 1;
     }
@@ -386,22 +396,66 @@
       background: #f0f0f0;
       margin-right: 20px;
     }
+
+    .notification-container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 500px;
+      margin-top: 100px;
+      text-align: center;
+    }
+
+    .notification-list {
+      width: 100%;
+      max-height: 400px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+
+    .notification-item {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .friend-item {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .friend-item img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+    }
   </style>
 </head>
 <body>
-
   <div class="header">
     <span id="header-title" data-i18n="appTitle">Train Talk</span>
   </div>
 
   <div id="home-page" class="page active">
     <div class="grid-container">
-      <div class="grid-item"><img src="フレンド.png" alt="フレンド" /><br><span data-i18n="friends">フレンド</span></div>
+      <div class="grid-item" onclick="showFriends()"><img src="フレンド.png" alt="フレンド" /><br><span data-i18n="friends">フレンド</span></div>
       <div class="grid-item" onclick="showProfile()"><img id="profile-icon" src="プロフィール.png" alt="プロフィール" /><br><span data-i18n="profile">プロフィール</span></div>
-      <div class="grid-item"><img src="通知.png" alt="通知" /><br><span data-i18n="notifications">通知</span></div>
+      <div class="grid-item" onclick="showNotifications()"><img src="通知.png" alt="通知" /><br><span data-i18n="notifications">通知</span></div>
       <div class="grid-item" onclick="showSettings()"><img src="設定.png" alt="設定" /><br><span data-i18n="settings">設定</span></div>
       <div class="grid-item" onclick="showAnnouncement()"><img src="お知らせ.png" alt="お知らせ" /><br><span data-i18n="announcements">お知らせ</span></div>
-      <div class="grid-item"><img src="趣味マッチング.png" alt="趣味マッチング" /><br><span data-i18n="hobbyMatching">趣味マッチング</span></div>
+      <div class="grid-item" onclick="showHobbyMatching()"><img src="趣味マッチング.png" alt="趣味マッチング" /><br><span data-i18n="hobbyMatching">趣味マッチング</span></div>
       <div class="grid-item" onclick="openTrends()"><img src="トレンド.png" alt="トレンド" /><br><span data-i18n="trends">トレンド</span></div>
       <div class="grid-item" onclick="showLocalTalk()"><img src="ローカルトーク.png" alt="ローカルトーク" /><br><span data-i18n="localTalk">ローカルトーク</span></div>
     </div>
@@ -432,9 +486,54 @@
       <img id="profile-image" src="プロフィール.png" alt="プロフィール画像" />
       <label for="profile-image-input" data-i18n="selectProfileImage">プロフィール画像を選択</label>
       <input type="file" id="profile-image-input" accept="image/*">
+      <label for="username" data-i18n="username">ユーザー名</label>
       <input type="text" id="username" data-i18n-placeholder="usernamePlaceholder" value="ユーザー">
-      <button onclick="saveRobin Hood: Legend of SherwoodsaveProfile()" data-i18n="save">保存</button>
-      <div id="save-message" class="save-message" data-i18n="saved">変更しました！</div>
+      <label for="bio" data-i18n="bio">自己紹介</label>
+      <textarea id="bio" data-i18n-placeholder="bioPlaceholder"></textarea>
+      <label for="hobby" data-i18n="hobby">趣味</label>
+      <select id="hobby" data-i18n-placeholder="hobbyPlaceholder">
+        <option value="" data-i18n="selectHobby">趣味を選択</option>
+        <option value="game" data-i18n="hobbyGame">ゲーム</option>
+        <option value="music" data-i18n="hobbyMusic">音楽鑑賞</option>
+        <option value="video" data-i18n="hobbyVideo">動画鑑賞</option>
+        <option value="shopping" data-i18n="hobbyShopping">ショッピング</option>
+        <option value="movie" data-i18n="hobbyMovie">映画鑑賞</option>
+        <option value="reading" data-i18n="hobbyReading">読書</option>
+        <option value="sports" data-i18n="hobbySports">スポーツ</option>
+        <option value="cooking" data-i18n="hobbyCooking">料理</option>
+        <option value="travel" data-i18n="hobbyTravel">旅行</option>
+        <option value="photography" data-i18n="hobbyPhotography">写真撮影</option>
+      </select>
+      <button onclick="saveProfile()" data-i18n="save">保存</button>
+      <div id="save-message" class="save-message" data-i18n="saved">保存しました！</div>
+    </div>
+  </div>
+
+  <div id="view-profile-page" class="page">
+    <button class="back-button" onclick="showLocalTalk()"><span>⬅</span><span data-i18n="back">戻る</span></button>
+    <div class="profile-container">
+      <img id="view-profile-image" src="プロフィール.png" alt="プロフィール画像" />
+      <h3 id="view-username"></h3>
+      <p id="view-bio"></p>
+      <p id="view-hobby"></p>
+      <button class="friend-request-button" onclick="sendFriendRequest()" data-i18n="sendFriendRequest">フレンド申請</button>
+      <div id="friend-request-message" class="friend-request-message" data-i18n="friendRequestSent">申請しました！</div>
+    </div>
+  </div>
+
+  <div id="friends-page" class="page">
+    <button class="back-button" onclick="showHome()"><span>⬅</span><span data-i18n="back">戻る</span></button>
+    <div class="notification-container">
+      <h3 data-i18n="friends">フレンド</h3>
+      <div id="friend-list" class="notification-list"></div>
+    </div>
+  </div>
+
+  <div id="notifications-page" class="page">
+    <button class="back-button" onclick="showHome()"><span>⬅</span><span data-i18n="back">戻る</span></button>
+    <div class="notification-container">
+      <h3 data-i18n="notifications">通知</h3>
+      <div id="notification-list" class="notification-list"></div>
     </div>
   </div>
 
@@ -473,6 +572,16 @@
     </div>
   </div>
 
+  <div id="hobby-matching-page" class="page">
+    <button class="back-button" onclick="showHome()"><span>⬅</span><span data-i18n="back">戻る</span></button>
+    <div class="hobby-matching-wrapper">
+      <div class="matching-users">
+        <h3 data-i18n="matchingUsers">趣味が一致するユーザー</h3>
+        <div id="matching-user-list" class="user-list"></div>
+      </div>
+    </div>
+  </div>
+
   <script>
     // 言語データ
     const languageData = {
@@ -499,7 +608,7 @@
         selectProfileImage: "プロフィール画像を選択",
         usernamePlaceholder: "ユーザー名を入力",
         save: "保存",
-        saved: "変更しました！",
+        saved: "保存しました！",
         language: "言語",
         japanese: "日本語",
         english: "英語",
@@ -524,7 +633,31 @@
         passwordSaveError: "パスワードの保存に失敗しました: ",
         trendsError: "ニュースサイトを開けませんでした。ポップアップブロッカーを確認してください。",
         languageChanged: "変更しました！",
-        chatWith: "とのチャット"
+        chatWith: "とのチャット",
+        bio: "自己紹介",
+        bioPlaceholder: "自己紹介を入力",
+        sendFriendRequest: "フレンド申請",
+        friendRequest: "さんからフレンド申請が来ました。",
+        acceptFriend: "承認する",
+        likedYourPost: "さんがあなたの投稿にいいねしました。",
+        repliedToYourPost: "さんがあなたの投稿に返信しました。",
+        noFriends: "フレンドがいません。",
+        friendAccepted: "さんがあなたのフレンド申請を承認しました。",
+        hobby: "趣味",
+        selectHobby: "趣味を選択",
+        hobbyGame: "ゲーム",
+        hobbyMusic: "音楽鑑賞",
+        hobbyVideo: "動画鑑賞",
+        hobbyShopping: "ショッピング",
+        hobbyMovie: "映画鑑賞",
+        hobbyReading: "読書",
+        hobbySports: "スポーツ",
+        hobbyCooking: "料理",
+        hobbyTravel: "旅行",
+        hobbyPhotography: "写真撮影",
+        matchingUsers: "趣味が一致するユーザー",
+        noMatchingUsers: "同じ趣味のユーザーが近くにいません。",
+        friendRequestSent: "申請しました！"
       },
       en: {
         appTitle: "Train Talk",
@@ -549,7 +682,7 @@
         selectProfileImage: "Select Profile Image",
         usernamePlaceholder: "Enter username",
         save: "Save",
-        saved: "Changed!",
+        saved: "Saved!",
         language: "Language",
         japanese: "Japanese",
         english: "English",
@@ -574,7 +707,31 @@
         passwordSaveError: "Failed to save password: ",
         trendsError: "Could not open news site. Please check your popup blocker.",
         languageChanged: "Changed!",
-        chatWith: "Chat with"
+        chatWith: "Chat with",
+        bio: "Bio",
+        bioPlaceholder: "Enter your bio",
+        sendFriendRequest: "Send Friend Request",
+        friendRequest: " sent you a friend request.",
+        acceptFriend: "Accept",
+        likedYourPost: " liked your post.",
+        repliedToYourPost: " replied to your post.",
+        noFriends: "No friends.",
+        friendAccepted: " accepted your friend request.",
+        hobby: "Hobby",
+        selectHobby: "Select a hobby",
+        hobbyGame: "Gaming",
+        hobbyMusic: "Music Listening",
+        hobbyVideo: "Video Watching",
+        hobbyShopping: "Shopping",
+        hobbyMovie: "Movie Watching",
+        hobbyReading: "Reading",
+        hobbySports: "Sports",
+        hobbyCooking: "Cooking",
+        hobbyTravel: "Traveling",
+        hobbyPhotography: "Photography",
+        matchingUsers: "Users with Matching Hobbies",
+        noMatchingUsers: "No users with the same hobby nearby.",
+        friendRequestSent: "Request sent!"
       }
     };
 
@@ -603,6 +760,12 @@
       document.querySelectorAll('.like-button').forEach(button => {
         const isLiked = button.classList.contains('liked');
         button.innerHTML = `${languageData[currentLanguage].like} <span class="heart-emoji">${isLiked ? '❤️' : '🤍'}</span>`;
+      });
+      document.querySelectorAll('.friend-request-button').forEach(button => {
+        button.innerHTML = `${languageData[currentLanguage].sendFriendRequest}`;
+      });
+      document.querySelectorAll('.accept-friend-button').forEach(button => {
+        button.innerHTML = `${languageData[currentLanguage].acceptFriend}`;
       });
     }
 
@@ -641,9 +804,9 @@
 
     // ダミーのユーザーデータ
     const dummyUsers = [
-      { id: 1, name: "ユーザーA", lat: 35.6895, lon: 139.6917, distance: 0 },
-      { id: 2, name: "ユーザーB", lat: 35.6890, lon: 139.6920, distance: 0 },
-      { id: 3, name: "ユーザーC", lat: 35.6900, lon: 139.6900, distance: 0 }
+      { id: 1, name: "ユーザーA", lat: 35.6895, lon: 139.6917, distance: 0, bio: "鉄道マニアです！", profileImage: 'プロフィール.png', hobby: "game" },
+      { id: 2, name: "ユーザーB", lat: 35.6890, lon: 139.6920, distance: 0, bio: "旅行が好き！", profileImage: 'プロフィール.png', hobby: "travel" },
+      { id: 3, name: "ユーザーC", lat: 35.6900, lon: 139.6900, distance: 0, bio: "よろしく！", profileImage: 'プロフィール.png', hobby: "movie" }
     ];
 
     // ハバーサイン公式で距離計算（km）
@@ -686,6 +849,58 @@
 
           if (userList.children.length === 0) {
             userList.textContent = languageData[currentLanguage].noNearbyUsers;
+          }
+        },
+        (error) => {
+          alert(languageData[currentLanguage].geolocationError + error.message);
+        }
+      );
+    }
+
+    // 趣味マッチングページ表示
+    function showHobbyMatching() {
+      document.getElementById("home-page").classList.remove("active");
+      document.getElementById("local-talk-page").classList.remove("active");
+      document.getElementById("profile-page").classList.remove("active");
+      document.getElementById("settings-page").classList.remove("active");
+      document.getElementById("announcement-page").classList.remove("active");
+      document.getElementById("view-profile-page").classList.remove("active");
+      document.getElementById("friends-page").classList.remove("active");
+      document.getElementById("notifications-page").classList.remove("active");
+      document.getElementById("hobby-matching-page").classList.add("active");
+      document.getElementById("header-title").innerText = languageData[currentLanguage].hobbyMatching;
+      showMatchingUsers();
+    }
+
+    // 趣味が一致するユーザー表示
+    function showMatchingUsers() {
+      if (!navigator.geolocation) {
+        alert(languageData[currentLanguage].noGeolocation);
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const userLat = position.coords.latitude;
+          const userLon = position.coords.longitude;
+          const userHobby = localStorage.getItem('hobby') || '';
+
+          const userList = document.getElementById("matching-user-list");
+          userList.innerHTML = "";
+
+          dummyUsers.forEach(user => {
+            user.distance = calculateDistance(userLat, userLon, user.lat, user.lon);
+            if (user.distance <= 5 && user.hobby === userHobby && userHobby !== '') {
+              const userItem = document.createElement("div");
+              userItem.classList.add("user-item");
+              userItem.textContent = `${user.name} (${user.distance.toFixed(2)}km)`;
+              userItem.onclick = () => viewUserProfile(user.name);
+              userList.appendChild(userItem);
+            }
+          });
+
+          if (userList.children.length === 0) {
+            userList.textContent = languageData[currentLanguage].noMatchingUsers;
           }
         },
         (error) => {
@@ -780,13 +995,13 @@
         postDiv.classList.add("post");
         postDiv.innerHTML = `
           <div style="display: flex; align-items: center; margin-bottom: 10px;">
-            <img src="${post.profileImage || 'プロフィール.png'}" alt="プロフィール画像" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;" />
+            <img src="${post.profileImage || 'プロフィール.png'}" alt="プロフィール画像" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px; cursor: pointer;" onclick="viewUserProfile('${post.username}')" />
             <strong>${post.username}</strong>
           </div>
           <p>${post.text}</p>
           <small>${post.date}</small>
-          <button class="reply-button" onclick="replyToPost(this)">${languageData[currentLanguage].reply} <span class="reply-emoji">💬</span></button>
-          <button class="like-button" onclick="toggleLike(this)">${languageData[currentLanguage].like} <span class="heart-emoji">🤍</span></button>
+          <button class="reply-button" onclick="replyToPost(this, '${post.id}', '${post.username}')">${languageData[currentLanguage].reply} <span class="reply-emoji">💬</span></button>
+          <button class="like-button" onclick="toggleLike(this, '${post.id}', '${post.username}')">${languageData[currentLanguage].like} <span class="heart-emoji">🤍</span></button>
           <span class="like-count">0 ${languageData[currentLanguage].like}</span>
           <div class="reply-section" style="margin-top:10px;"></div>
         `;
@@ -801,6 +1016,10 @@
       document.getElementById("profile-page").classList.remove("active");
       document.getElementById("settings-page").classList.remove("active");
       document.getElementById("announcement-page").classList.add("active");
+      document.getElementById("view-profile-page").classList.remove("active");
+      document.getElementById("friends-page").classList.remove("active");
+      document.getElementById("notifications-page").classList.remove("active");
+      document.getElementById("hobby-matching-page").classList.remove("active");
       document.getElementById("header-title").innerText = languageData[currentLanguage].announcements;
       loadAnnouncements();
     }
@@ -892,36 +1111,240 @@
       });
     }
 
+    // フレンドページ表示
+    function showFriends() {
+      document.getElementById("home-page").classList.remove("active");
+      document.getElementById("local-talk-page").classList.remove("active");
+      document.getElementById("profile-page").classList.remove("active");
+      document.getElementById("settings-page").classList.remove("active");
+      document.getElementById("announcement-page").classList.remove("active");
+      document.getElementById("view-profile-page").classList.remove("active");
+      document.getElementById("friends-page").classList.add("active");
+      document.getElementById("notifications-page").classList.remove("active");
+      document.getElementById("hobby-matching-page").classList.remove("active");
+      document.getElementById("header-title").innerText = languageData[currentLanguage].friends;
+      loadFriends();
+    }
+
+    // 通知ページ表示
+    function showNotifications() {
+      document.getElementById("home-page").classList.remove("active");
+      document.getElementById("local-talk-page").classList.remove("active");
+      document.getElementById("profile-page").classList.remove("active");
+      document.getElementById("settings-page").classList.remove("active");
+      document.getElementById("announcement-page").classList.remove("active");
+      document.getElementById("view-profile-page").classList.remove("active");
+      document.getElementById("friends-page").classList.remove("active");
+      document.getElementById("notifications-page").classList.add("active");
+      document.getElementById("hobby-matching-page").classList.remove("active");
+      document.getElementById("header-title").innerText = languageData[currentLanguage].notifications;
+      loadNotifications();
+    }
+
+    // プロフィールページ表示
+    function showProfile() {
+      document.getElementById("home-page").classList.remove("active");
+      document.getElementById("local-talk-page").classList.remove("active");
+      document.getElementById("settings-page").classList.remove("active");
+      document.getElementById("announcement-page").classList.remove("active");
+      document.getElementById("view-profile-page").classList.remove("active");
+      document.getElementById("friends-page").classList.remove("active");
+      document.getElementById("notifications-page").classList.remove("active");
+      document.getElementById("hobby-matching-page").classList.remove("active");
+      document.getElementById("profile-page").classList.add("active");
+      document.getElementById("header-title").innerText = languageData[currentLanguage].profile;
+
+      const profileImageInput = document.getElementById('profile-image-input');
+      if (profileImageInput) {
+        profileImageInput.addEventListener('change', function(event) {
+          const file = event.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              document.getElementById('profile-image').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      }
+    }
+
+    // ユーザープロフィール表示
+    function viewUserProfile(username) {
+      document.getElementById("home-page").classList.remove("active");
+      document.getElementById("local-talk-page").classList.remove("active");
+      document.getElementById("profile-page").classList.remove("active");
+      document.getElementById("settings-page").classList.remove("active");
+      document.getElementById("announcement-page").classList.remove("active");
+      document.getElementById("friends-page").classList.remove("active");
+      document.getElementById("notifications-page").classList.remove("active");
+      document.getElementById("hobby-matching-page").classList.remove("active");
+      document.getElementById("view-profile-page").classList.add("active");
+      document.getElementById("header-title").innerText = languageData[currentLanguage].profile;
+
+      const user = dummyUsers.find(u => u.name === username) || {
+        name: username,
+        bio: "",
+        profileImage: localStorage.getItem('profileImage') || 'プロフィール.png',
+        hobby: localStorage.getItem('hobby') || ''
+      };
+      document.getElementById("view-username").textContent = user.name;
+      document.getElementById("view-bio").textContent = user.bio || languageData[currentLanguage].bioPlaceholder;
+      document.getElementById("view-hobby").textContent = user.hobby ? `${languageData[currentLanguage].hobby}: ${languageData[currentLanguage][`hobby${user.hobby.charAt(0).toUpperCase() + user.hobby.slice(1)}`]}` : '';
+      document.getElementById("view-profile-image").src = user.profileImage || 'プロフィール.png';
+      localStorage.setItem('viewingUser', username);
+    }
+
+    // フレンド申請送信
+    function sendFriendRequest() {
+      const recipient = localStorage.getItem('viewingUser');
+      const sender = localStorage.getItem('username') || (currentLanguage === 'ja' ? 'ユーザー' : 'User');
+      const notifications = JSON.parse(localStorage.getItem(`notifications_${recipient}`) || '[]');
+      notifications.push({
+        id: Date.now(),
+        type: 'friendRequest',
+        sender: sender,
+        date: new Date().toLocaleString(currentLanguage === 'ja' ? 'ja-JP' : 'en-US')
+      });
+      localStorage.setItem(`notifications_${recipient}`, JSON.stringify(notifications));
+      showFriendRequestMessage();
+    }
+
+    // フレンド申請メッセージ表示
+    function showFriendRequestMessage() {
+      const message = document.getElementById('friend-request-message');
+      message.classList.add('show');
+      setTimeout(() => {
+        message.classList.remove('show');
+      }, 2000);
+    }
+
+    // 通知読み込み
+    function loadNotifications() {
+      const username = localStorage.getItem('username') || (currentLanguage === 'ja' ? 'ユーザー' : 'User');
+      const notificationList = document.getElementById("notification-list");
+      notificationList.innerHTML = "";
+      const notifications = JSON.parse(localStorage.getItem(`notifications_${username}`) || '[]');
+      if (notifications.length === 0) {
+        notificationList.textContent = languageData[currentLanguage].noAnnouncements;
+        return;
+      }
+      notifications.forEach(notification => {
+        const item = document.createElement("div");
+        item.classList.add("notification-item");
+        if (notification.type === 'friendRequest') {
+          item.innerHTML = `
+            <span>${notification.sender}${languageData[currentLanguage].friendRequest}</span>
+            <button class="accept-friend-button" onclick="acceptFriendRequest('${notification.sender}')">${languageData[currentLanguage].acceptFriend}</button>
+          `;
+        } else if (notification.type === 'like') {
+          item.innerHTML = `
+            <span>${notification.sender}${languageData[currentLanguage].likedYourPost}</span>
+            <small>${notification.date}</small>
+          `;
+        } else if (notification.type === 'reply') {
+          item.innerHTML = `
+            <span>${notification.sender}${languageData[currentLanguage].repliedToYourPost}</span>
+            <small>${notification.date}</small>
+          `;
+        } else if (notification.type === 'friendAccepted') {
+          item.innerHTML = `
+            <span>${notification.sender}${languageData[currentLanguage].friendAccepted}</span>
+            <small>${notification.date}</small>
+          `;
+        }
+        notificationList.appendChild(item);
+      });
+    }
+
+    // フレンド申請承認
+    function acceptFriendRequest(friendName) {
+      const username = localStorage.getItem('username') || (currentLanguage === 'ja' ? 'ユーザー' : 'User');
+      const friends = JSON.parse(localStorage.getItem(`friends_${username}`) || '[]');
+      if (!friends.includes(friendName)) {
+        friends.push(friendName);
+        localStorage.setItem(`friends_${username}`, JSON.stringify(friends));
+      }
+      const notifications = JSON.parse(localStorage.getItem(`notifications_${username}`) || '[]');
+      const updatedNotifications = notifications.filter(n => n.sender !== friendName || n.type !== 'friendRequest');
+      localStorage.setItem(`notifications_${username}`, JSON.stringify(updatedNotifications));
+
+      // フレンド申請を承認したことを送信者に通知
+      const senderNotifications = JSON.parse(localStorage.getItem(`notifications_${friendName}`) || '[]');
+      senderNotifications.push({
+        id: Date.now(),
+        type: 'friendAccepted',
+        sender: username,
+        date: new Date().toLocaleString(currentLanguage === 'ja' ? 'ja-JP' : 'en-US')
+      });
+      localStorage.setItem(`notifications_${friendName}`, JSON.stringify(senderNotifications));
+
+      // 相互フレンド関係を設定
+      const friendFriends = JSON.parse(localStorage.getItem(`friends_${friendName}`) || '[]');
+      if (!friendFriends.includes(username)) {
+        friendFriends.push(username);
+        localStorage.setItem(`friends_${friendName}`, JSON.stringify(friendFriends));
+      }
+
+      loadNotifications();
+      loadFriends();
+    }
+
+    // フレンドリスト読み込み
+    function loadFriends() {
+      const username = localStorage.getItem('username') || (currentLanguage === 'ja' ? 'ユーザー' : 'User');
+      const friendList = document.getElementById("friend-list");
+      friendList.innerHTML = "";
+      const friends = JSON.parse(localStorage.getItem(`friends_${username}`) || '[]');
+      if (friends.length === 0) {
+        friendList.textContent = languageData[currentLanguage].noFriends;
+        return;
+      }
+      friends.forEach(friend => {
+        const friendData = dummyUsers.find(u => u.name === friend) || {
+          name: friend,
+          profileImage: 'プロフィール.png'
+        };
+        const item = document.createElement("div");
+        item.classList.add("friend-item");
+        item.innerHTML = `
+          <img src="${friendData.profileImage}" alt="プロフィール画像" />
+          <span>${friend}</span>
+        `;
+        friendList.appendChild(item);
+      });
+    }
+
     // 初期プロフィールロード
     window.onload = function() {
       const savedUsername = localStorage.getItem('username');
       const savedProfileImage = localStorage.getItem('profileImage');
+      const savedBio = localStorage.getItem('bio');
+      const savedHobby = localStorage.getItem('hobby');
       if (savedUsername) {
         document.getElementById('username').value = savedUsername;
       }
       if (savedProfileImage) {
         document.getElementById('profile-image').src = savedProfileImage;
       }
+      if (savedBio) {
+        document.getElementById('bio').value = savedBio;
+      }
+      if (savedHobby) {
+        document.getElementById('hobby').value = savedHobby;
+      }
       updateUIText();
     };
-
-    // 画像選択時にプレビュー更新
-    document.getElementById('profile-image-input').addEventListener('change', function(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          document.getElementById('profile-image').src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-    });
 
     function showHome() {
       document.getElementById("local-talk-page").classList.remove("active");
       document.getElementById("profile-page").classList.remove("active");
       document.getElementById("settings-page").classList.remove("active");
       document.getElementById("announcement-page").classList.remove("active");
+      document.getElementById("view-profile-page").classList.remove("active");
+      document.getElementById("friends-page").classList.remove("active");
+      document.getElementById("notifications-page").classList.remove("active");
+      document.getElementById("hobby-matching-page").classList.remove("active");
       document.getElementById("home-page").classList.add("active");
       document.getElementById("header-title").innerText = languageData[currentLanguage].appTitle;
     }
@@ -931,6 +1354,10 @@
       document.getElementById("profile-page").classList.remove("active");
       document.getElementById("settings-page").classList.remove("active");
       document.getElementById("announcement-page").classList.remove("active");
+      document.getElementById("view-profile-page").classList.remove("active");
+      document.getElementById("friends-page").classList.remove("active");
+      document.getElementById("notifications-page").classList.remove("active");
+      document.getElementById("hobby-matching-page").classList.remove("active");
       document.getElementById("local-talk-page").classList.add("active");
       document.getElementById("header-title").innerText = languageData[currentLanguage].localTalk;
       document.getElementById("searchInput").value = "";
@@ -938,20 +1365,15 @@
       showNearbyUsers();
     }
 
-    function showProfile() {
-      document.getElementById("home-page").classList.remove("active");
-      document.getElementById("local-talk-page").classList.remove("active");
-      document.getElementById("settings-page").classList.remove("active");
-      document.getElementById("announcement-page").classList.remove("active");
-      document.getElementById("profile-page").classList.add("active");
-      document.getElementById("header-title").innerText = languageData[currentLanguage].profile;
-    }
-
     function showSettings() {
       document.getElementById("home-page").classList.remove("active");
       document.getElementById("local-talk-page").classList.remove("active");
       document.getElementById("profile-page").classList.remove("active");
       document.getElementById("announcement-page").classList.remove("active");
+      document.getElementById("view-profile-page").classList.remove("active");
+      document.getElementById("friends-page").classList.remove("active");
+      document.getElementById("notifications-page").classList.remove("active");
+      document.getElementById("hobby-matching-page").classList.remove("active");
       document.getElementById("settings-page").classList.add("active");
       document.getElementById("header-title").innerText = languageData[currentLanguage].settings;
     }
@@ -966,15 +1388,16 @@
       const username = localStorage.getItem('username') || (currentLanguage === 'ja' ? 'ユーザー' : 'User');
       const profileImage = localStorage.getItem('profileImage') || 'プロフィール.png';
       const postDate = new Date().toLocaleString(currentLanguage === 'ja' ? 'ja-JP' : 'en-US');
+      const postId = Date.now();
       newPost.innerHTML = `
         <div style="display: flex; align-items: center; margin-bottom: 10px;">
-          <img src="${profileImage}" alt="プロフィール画像" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;" />
+          <img src="${profileImage}" alt="プロフィール画像" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px; cursor: pointer;" onclick="viewUserProfile('${username}')" />
           <strong>${username}</strong>
         </div>
         <p>${postText}</p>
         <small>${postDate}</small>
-        <button class="reply-button" onclick="replyToPost(this)">${languageData[currentLanguage].reply} <span class="reply-emoji">💬</span></button>
-        <button class="like-button" onclick="toggleLike(this)">${languageData[currentLanguage].like} <span class="heart-emoji">🤍</span></button>
+        <button class="reply-button" onclick="replyToPost(this, '${postId}', '${username}')">${languageData[currentLanguage].reply} <span class="reply-emoji">💬</span></button>
+        <button class="like-button" onclick="toggleLike(this, '${postId}', '${username}')">${languageData[currentLanguage].like} <span class="heart-emoji">🤍</span></button>
         <span class="like-count">0 ${languageData[currentLanguage].like}</span>
         <div class="reply-section" style="margin-top:10px;"></div>
       `;
@@ -983,7 +1406,7 @@
       // 投稿をlocalStorageに保存
       const posts = JSON.parse(localStorage.getItem('posts') || '[]');
       posts.unshift({
-        id: Date.now(),
+        id: postId,
         username: username,
         profileImage: profileImage,
         text: postText,
@@ -998,7 +1421,7 @@
       document.getElementById("postText").value = "";
     }
 
-    function toggleLike(button) {
+    function toggleLike(button, postId, postOwner) {
       const countSpan = button.nextElementSibling;
       const heartEmoji = button.querySelector('.heart-emoji');
       let current = parseInt(countSpan.textContent);
@@ -1010,10 +1433,22 @@
         countSpan.textContent = `${current + 1} ${languageData[currentLanguage].like}`;
         heartEmoji.textContent = '❤️';
         button.classList.add("liked");
+        const sender = localStorage.getItem('username') || (currentLanguage === 'ja' ? 'ユーザー' : 'User');
+        if (sender !== postOwner) {
+          const notifications = JSON.parse(localStorage.getItem(`notifications_${postOwner}`) || '[]');
+          notifications.push({
+            id: Date.now(),
+            type: 'like',
+            sender: sender,
+            postId: postId,
+            date: new Date().toLocaleString(currentLanguage === 'ja' ? 'ja-JP' : 'en-US')
+          });
+          localStorage.setItem(`notifications_${postOwner}`, JSON.stringify(notifications));
+        }
       }
     }
 
-    function replyToPost(button) {
+    function replyToPost(button, postId, postOwner) {
       const post = button.closest(".post");
       const replySection = post.querySelector(".reply-section");
 
@@ -1036,6 +1471,17 @@
           replySection.appendChild(replyP);
           textarea.remove();
           sendBtn.remove();
+          if (username !== postOwner) {
+            const notifications = JSON.parse(localStorage.getItem(`notifications_${postOwner}`) || '[]');
+            notifications.push({
+              id: Date.now(),
+              type: 'reply',
+              sender: username,
+              postId: postId,
+              date: new Date().toLocaleString(currentLanguage === 'ja' ? 'ja-JP' : 'en-US')
+            });
+            localStorage.setItem(`notifications_${postOwner}`, JSON.stringify(notifications));
+          }
         }
       };
 
@@ -1045,6 +1491,8 @@
 
     function saveProfile() {
       const username = document.getElementById('username').value.trim();
+      const bio = document.getElementById('bio').value.trim();
+      const hobby = document.getElementById('hobby').value;
       const profileImageInput = document.getElementById('profile-image-input');
       const profileImage = document.getElementById('profile-image');
       const saveMessage = document.getElementById('save-message');
@@ -1053,6 +1501,16 @@
 
       if (username) {
         localStorage.setItem('username', username);
+        saved = true;
+      }
+
+      if (bio) {
+        localStorage.setItem('bio', bio);
+        saved = true;
+      }
+
+      if (hobby) {
+        localStorage.setItem('hobby', hobby);
         saved = true;
       }
 
@@ -1067,7 +1525,7 @@
         saved = true;
       }
 
-      if (saved && !profileImageInput.files) {
+      if (saved) {
         showSaveMessage();
       }
     }
